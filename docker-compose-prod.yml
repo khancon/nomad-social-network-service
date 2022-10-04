@@ -1,0 +1,11 @@
+version: "3"
+services:
+  prod-backend:
+    image: prod-backend:latest
+    build:
+      dockerfile: Dockerfile
+    environment:
+      MONGODB_NAME: ${MONGODB_NAME_PROD}
+      MONGODB_URI: ${MONGODB_URI_PROD}
+    ports: 
+      - 8080:8080

@@ -4,8 +4,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.akhan.nomadsocialnetworkservice.validation.ValidEmail;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,14 +25,29 @@ public class User {
     @Id
     private String id;
 
+    @NotNull
+    @NotEmpty
     private String firstName;
+
+    @NotNull
+    @NotEmpty
     private String lastName;
+
+    @NotNull
+    @NotEmpty
+    @ValidEmail
+    private String email;
+
+    @NotNull
+    @NotEmpty
+    private String password;
+
+    @NotNull
+    @NotEmpty
     private String phoneNumber;
     private String college;
     private String gradYear;
     private LocalDate dob;
-    private String email;
-    private String password;
     private String location;
     private String pronouns;
     List<String> eventInterests = new ArrayList<>();

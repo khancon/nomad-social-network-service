@@ -1,7 +1,12 @@
 package com.akhan.nomadsocialnetworkservice.controller;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.akhan.nomadsocialnetworkservice.model.User;
 import com.akhan.nomadsocialnetworkservice.repository.UserRepository;
+import com.mongodb.connection.Stream;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -63,6 +69,11 @@ public class UserController {
         }
     }
 
+    // @PostMapping("/users/registration")
+    // public ResponseEntity<User> registerUser(@RequestBody User user){
+
+    // }
+
     @PutMapping("/users/{id}")
     public ResponseEntity<User> updateUserFully(@PathVariable("id") String id, @RequestBody User userDetails){
         try {
@@ -91,47 +102,66 @@ public class UserController {
     }
 
     @PatchMapping("/users/{id}")
-    public ResponseEntity<User> updateUserPartially(@PathVariable("id") String id, @RequestBody User userDetails){
+    public ResponseEntity<User> updateUserPartially(@PathVariable("id") String id, @RequestBody Map<String, Object> changes){
         try {
             Optional<User> _user = userRepository.findById(id);
             if(_user.isPresent()){
                 User user = _user.get();
-                if(userDetails.getFirstName() != null){
-                    user.setFirstName(userDetails.getFirstName());
-                }
-                if(userDetails.getLastName() != null){
-                    user.setLastName(userDetails.getLastName());
-                }
-                if(userDetails.getPhoneNumber() != null){
-                    user.setPhoneNumber(userDetails.getPhoneNumber());
-                }
-                if(userDetails.getCollege() != null){
-                    user.setCollege(userDetails.getCollege());
-                }
-                if(userDetails.getGradYear() != null){
-                    user.setGradYear(userDetails.getGradYear());
-                }
-                if(userDetails.getDob() != null){
-                    user.setDob(userDetails.getDob());
-                }
-                if(userDetails.getEmail() != null){
-                    user.setEmail(userDetails.getEmail());
-                }
-                if(userDetails.getPassword() != null){
-                    user.setPassword(userDetails.getPassword());
-                }
-                if(userDetails.getLocation() != null){
-                    user.setLocation(userDetails.getLocation());
-                }
-                if(userDetails.getPronouns() != null){
-                    user.setPronouns(userDetails.getPronouns());
-                }
-                if(userDetails.getEventInterests() != null){
-                    user.setEventInterests(userDetails.getEventInterests());
-                }                
-                if(userDetails.getFriends() != null){
-                    user.setFriends(userDetails.getFriends());
-                }
+                changes.forEach((change, value) -> {
+                    System.out.println(change + ": " + value);
+                    switch(change){
+                        case "firstName": user.setFirstName((String) value); break;
+                        case "lastName": user.setLastName((String) value); break;
+                        case "phoneNumber": user.setPhoneNumber((String) value); break;
+                        case "college": user.setCollege((String) value); break;
+                        case "gradYear": user.setGradYear((String) value); break;
+                        case "dob": user.setDob(LocalDate.parse((String)value)); break;
+                        case "email": user.setEmail((String) value); break;
+                        case "password": user.setPassword((String) value); break;
+                        case "location": user.setLocation((String) value); break;
+                        case "pronouns": user.setPronouns((String) value); break;
+                        // case "eventInterests": user.setEventInterests((List<String>) value); break;
+                        // case "friends": user.setFriends((List<String>) value); break;
+                    }
+                });
+                System.out.println("----");
+                // if(userDetails.getFirstName() != null){
+                //     user.setFirstName(userDetails.getFirstName());
+                // }
+                // if(userDetails.getLastName() != null){
+                //     user.setLastName(userDetails.getLastName());
+                // }
+                // if(userDetails.getPhoneNumber() != null){
+                //     user.setPhoneNumber(userDetails.getPhoneNumber());
+                // }
+                // if(userDetails.getCollege() != null){
+                //     user.setCollege(userDetails.getCollege());
+                // }
+                // if(userDetails.getGradYear() != null){
+                //     user.setGradYear(userDetails.getGradYear());
+                // }
+                // if(userDetails.getDob() != null){
+                //     user.setDob(userDetails.getDob());
+                // }
+                // if(userDetails.getEmail() != null){
+                //     user.setEmail(userDetails.getEmail());
+                // }
+                // if(userDetails.getPassword() != null){
+                //     user.setPassword(userDetails.getPassword());
+                // }
+                // if(userDetails.getLocation() != null){
+                //     user.setLocation(userDetails.getLocation());
+                // }
+                // if(userDetails.getPronouns() != null){
+                //     user.setPronouns(userDetails.getPronouns());
+                // }
+                // if(userDetails.getEventInterests() != null){
+                //     user.setEventInterests(userDetails.getEventInterests());
+                // }                
+                // if(userDetails.getFriends() != null){
+                //     user.setFriends(userDetails.getFriends());
+                // }
+
                 return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);

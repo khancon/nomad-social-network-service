@@ -45,19 +45,28 @@ public class User {
     @NotNull
     @NotEmpty
     private String phoneNumber;
+    private String verificationCode;
+    private boolean enabled;
     private String college;
     private String gradYear;
+    private String occupation;
     private LocalDate dob;
     private String location;
+    private boolean hideLastName;
     private String pronouns;
-    List<String> eventInterests = new ArrayList<>();
+    private String profileImage;
+    List<String> eventsAttendingIds = new ArrayList<>();
+    List<String> eventsMaybeAttendingIds = new ArrayList<>();
+    List<String> eventsInterestedIds = new ArrayList<>();
+    List<Event> likedEvents = new ArrayList<>();
+    List<Tag> eventCategoryInterests = new ArrayList<>();
     List<String> friends = new ArrayList<>();
+    List<String> roles = new ArrayList<>();
 
     public User(String firstName, String lastName){
         this.firstName = firstName;
         this.lastName = lastName;
     }
-
     // public String getId(){
     //     return this.id;
     // }

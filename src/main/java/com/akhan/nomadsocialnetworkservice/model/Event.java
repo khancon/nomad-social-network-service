@@ -1,8 +1,14 @@
 package com.akhan.nomadsocialnetworkservice.model;
 
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,17 +25,32 @@ public class Event {
     @Id
     private String id;
 
+    @NotNull
+    @NotEmpty
     private String name;
-    private String description;
-    private String location;
-    private Date dateTime;
-    private User creator;
-    List<Tag> tags = new ArrayList<>();
 
-    public Event(String name, String description, String location, Date dateTime){
+    @NotNull
+    @NotEmpty
+    private String location;
+
+    @NotNull
+    @NotEmpty
+    private LocalDate date;
+
+    private String description;
+    private LocalTime time;
+    private boolean isPublic;
+    private boolean isPostable;
+    private String userCreatorId;
+    Map<String, String> tags = new HashMap<>();
+    Set<String> userIdsOfAttending = new HashSet<>();
+    Set<String> userIdsOfLiked = new HashSet<>();
+
+    public Event(String name, String description, String location, LocalDate date, LocalTime time){
         this.name = name;
         this.description = description;
         this.location = location;
-        this.dateTime = dateTime;
+        this.date = date;
+        this.time = time;
     }
 }

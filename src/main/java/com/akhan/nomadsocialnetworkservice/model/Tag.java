@@ -1,5 +1,7 @@
 package com.akhan.nomadsocialnetworkservice.model;
 
+import java.util.HashSet;
+import java.util.Set;
 // import java.util.ArrayList;
 // import java.util.List;
 
@@ -20,5 +22,5 @@ public class Tag {
 
     private String label;
     private String labelDescription;
-    // List<String> eventIds = new ArrayList<>();
+    Set<String> eventIds = new HashSet<>();
 }

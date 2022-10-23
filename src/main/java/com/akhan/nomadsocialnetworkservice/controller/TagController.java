@@ -1,6 +1,7 @@
 package com.akhan.nomadsocialnetworkservice.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +20,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.akhan.nomadsocialnetworkservice.model.Tag;
 import com.akhan.nomadsocialnetworkservice.repository.TagRepository;
+import com.akhan.nomadsocialnetworkservice.service.ResponseObjectService;
+import com.akhan.nomadsocialnetworkservice.service.TagService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api")
 public class TagController {
     
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+
     @Autowired
     TagRepository tagRepository;
+
+    @Autowired
+    TagService tagService;
+
+    @Autowired
+    ResponseObjectService responseObjectService;
 
     @GetMapping("/tags")
     public ResponseEntity<List<Tag>> getAllTags(){
@@ -58,6 +72,15 @@ public class TagController {
         }
     }
 
+    @PostMapping("/tags/addEvents/{tagId}")
+    public ResponseEntity<Tag> addEventsToTag(@PathVariable("tagId") String tagId, @RequestBody List<String> eventIds){
+        final Tag tag = tagService.addEventsToTag(eventIds, tagId);
+        if(tag != null){
+            LOGGER.info("Event ids added to tag {}", tagId);
+        }
+        return new ResponseEntity<Tag>(tag, HttpStatus.OK);
+    }
+
     @PutMapping("/tags/{id}")
     public ResponseEntity<Tag> updateTagFully(@PathVariable("id") String id, @RequestBody Tag tagDetails){
         try {
@@ -76,17 +99,17 @@ public class TagController {
     }
 
     @PatchMapping("/tags/{id}")
-    public ResponseEntity<Tag> updateTagPartially(@PathVariable("id") String id, @RequestBody Tag tagDetails){
+    public ResponseEntity<Tag> updateTagPartially(@PathVariable("id") String id, @RequestBody Map<String, Object> changes){
         try {
             Optional<Tag> _tag = tagRepository.findById(id);
             if(_tag.isPresent()){
                 Tag tag = _tag.get();
-                if(tagDetails.getLabel() != null){
-                    tag.setLabel(tagDetails.getLabel());
-                }
-                if(tagDetails.getLabelDescription() != null){
-                    tag.setLabelDescription(tagDetails.getLabelDescription());
-                }
+                changes.forEach((change, value) -> {
+                    switch(change){
+                        case "label": tag.setLabel((String) value);
+                        case "labelDescription": tag.setLabelDescription((String)value);
+                    }
+                });
                 return new ResponseEntity<>(tagRepository.save(tag), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);

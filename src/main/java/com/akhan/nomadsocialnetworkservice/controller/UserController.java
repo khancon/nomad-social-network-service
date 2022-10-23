@@ -1,12 +1,9 @@
 package com.akhan.nomadsocialnetworkservice.controller;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.akhan.nomadsocialnetworkservice.model.User;
 import com.akhan.nomadsocialnetworkservice.repository.UserRepository;
-import com.mongodb.connection.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -33,6 +32,8 @@ public class UserController {
     
     @Autowired
     UserRepository userRepository;
+
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     @GetMapping("")
     public String home(){
@@ -90,7 +91,7 @@ public class UserController {
                 user.setPassword(userDetails.getPassword());
                 user.setLocation(userDetails.getLocation());
                 user.setPronouns(userDetails.getPronouns());
-                user.setEventInterests(userDetails.getEventInterests());
+                user.setEventCategoryInterests(userDetails.getEventCategoryInterests());
                 user.setFriends(userDetails.getFriends());
                 return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
             } else {
@@ -108,7 +109,8 @@ public class UserController {
             if(_user.isPresent()){
                 User user = _user.get();
                 changes.forEach((change, value) -> {
-                    System.out.println(change + ": " + value);
+                    // System.out.println(change + ": " + value);
+                    LOGGER.info("Changing field {} for user {}", change, id);
                     switch(change){
                         case "firstName": user.setFirstName((String) value); break;
                         case "lastName": user.setLastName((String) value); break;
@@ -124,44 +126,6 @@ public class UserController {
                         // case "friends": user.setFriends((List<String>) value); break;
                     }
                 });
-                System.out.println("----");
-                // if(userDetails.getFirstName() != null){
-                //     user.setFirstName(userDetails.getFirstName());
-                // }
-                // if(userDetails.getLastName() != null){
-                //     user.setLastName(userDetails.getLastName());
-                // }
-                // if(userDetails.getPhoneNumber() != null){
-                //     user.setPhoneNumber(userDetails.getPhoneNumber());
-                // }
-                // if(userDetails.getCollege() != null){
-                //     user.setCollege(userDetails.getCollege());
-                // }
-                // if(userDetails.getGradYear() != null){
-                //     user.setGradYear(userDetails.getGradYear());
-                // }
-                // if(userDetails.getDob() != null){
-                //     user.setDob(userDetails.getDob());
-                // }
-                // if(userDetails.getEmail() != null){
-                //     user.setEmail(userDetails.getEmail());
-                // }
-                // if(userDetails.getPassword() != null){
-                //     user.setPassword(userDetails.getPassword());
-                // }
-                // if(userDetails.getLocation() != null){
-                //     user.setLocation(userDetails.getLocation());
-                // }
-                // if(userDetails.getPronouns() != null){
-                //     user.setPronouns(userDetails.getPronouns());
-                // }
-                // if(userDetails.getEventInterests() != null){
-                //     user.setEventInterests(userDetails.getEventInterests());
-                // }                
-                // if(userDetails.getFriends() != null){
-                //     user.setFriends(userDetails.getFriends());
-                // }
-
                 return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);

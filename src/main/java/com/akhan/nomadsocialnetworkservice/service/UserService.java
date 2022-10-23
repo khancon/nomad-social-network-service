@@ -4,15 +4,21 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.akhan.nomadsocialnetworkservice.error.UserAlreadyExistException;
 import com.akhan.nomadsocialnetworkservice.model.User;
 import com.akhan.nomadsocialnetworkservice.model.UserDto;
 import com.akhan.nomadsocialnetworkservice.repository.UserRepository;
 
+@Service
 public class UserService implements IUserService{
+
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
     
     @Autowired
     UserRepository userRepository;
@@ -23,6 +29,7 @@ public class UserService implements IUserService{
     @Override
     public User registerNewUserAccount(final UserDto account) {
         if (emailExists(account.getEmail())) {
+            LOGGER.error("There is an account with that email address: {}", account.getEmail());
             throw new UserAlreadyExistException("There is an account with that email address: " + account.getEmail());
         }
         final User user = new User();
@@ -36,8 +43,10 @@ public class UserService implements IUserService{
         return userRepository.save(user);
     }
 
-    private boolean emailExists(String email) {
-        return userRepository.findByEmail(email) != null;
+    @Override
+    public boolean emailExists(String email) {
+        // return userRepository.findByEmail(email) != null;
+        return userRepository.existsByEmail(email);
     }
 
     @Override
@@ -72,8 +81,7 @@ public class UserService implements IUserService{
 
     @Override
     public User findUserByEmail(String email) {
-        // TODO Auto-generated method stub
-        return null;
+        return userRepository.findByEmail(email);
     }
 
     @Override

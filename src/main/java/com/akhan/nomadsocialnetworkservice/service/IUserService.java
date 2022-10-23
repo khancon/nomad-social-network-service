@@ -50,4 +50,6 @@ public interface IUserService {
     String isValidNewLocationToken(String token);
 
     void addUserLocation(User user, String ip);
+
+    boolean emailExists(String email);
 }

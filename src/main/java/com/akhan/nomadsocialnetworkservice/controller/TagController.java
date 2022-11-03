@@ -44,12 +44,8 @@ public class TagController {
 
     @GetMapping("/tags")
     public ResponseEntity<List<Tag>> getAllTags(){
-        try {
-            List<Tag> tags = tagRepository.findAll();
-            return new ResponseEntity<>(tags, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<Tag> tags = tagService.getAllTags();
+        return new ResponseEntity<>(tags, HttpStatus.OK);
     }
 
     @GetMapping("/tags/{id}")

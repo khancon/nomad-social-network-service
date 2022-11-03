@@ -2,8 +2,8 @@ package com.akhan.nomadsocialnetworkservice.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.akhan.nomadsocialnetworkservice.model.User;
+import com.akhan.nomadsocialnetworkservice.model.Post;
 
-public interface PostRepository extends MongoRepository<User, String> {
-    
+public interface PostRepository extends MongoRepository<Post, String> {
+
 }

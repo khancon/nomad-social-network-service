@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.akhan.nomadsocialnetworkservice.error.EntityNotFoundException;
 import com.akhan.nomadsocialnetworkservice.error.UserAlreadyExistException;
 import com.akhan.nomadsocialnetworkservice.model.User;
 import com.akhan.nomadsocialnetworkservice.model.UserDto;
@@ -41,6 +42,15 @@ public class UserService implements IUserService{
         // user.setUsing2FA(account.isUsing2FA());
         // user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
         return userRepository.save(user);
+    }
+
+    public User getUserById(String id){
+        Optional<User> _user = userRepository.findById(id);
+        if(_user.isEmpty()){
+            LOGGER.error("User with id \'{}\' does not exist", id);
+            throw new EntityNotFoundException("User with id \'" + id + "\' does not exist");
+        }
+        return _user.get();
     }
 
     @Override

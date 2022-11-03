@@ -23,4 +23,16 @@ public class Tag {
     private String label;
     private String labelDescription;
     Set<String> eventIds = new HashSet<>();
+
+    public Tag(String label){
+        this.label = label;
+    }
+
+    public boolean addEventId(String eventId){
+        if(!this.eventIds.contains(eventId)){
+            this.eventIds.add(eventId);
+            return true;
+        }
+        return false;
+    }
 }

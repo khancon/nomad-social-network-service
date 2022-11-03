@@ -23,6 +23,15 @@ public class Post {
     private String eventId;
     private Instant createdAt;
     private String userCreatorId;
-    List<User> usersLiked = new ArrayList<>();
-    List<Comment> comments = new ArrayList<>();
+    List<String> comments = new ArrayList<>();
+    // Queue<Comment> top10Comments = new PriorityQueue<>();
+
+    public boolean addComment(String commentId){
+        return comments.add(commentId);
+    }
+
+    public boolean removeComment(String commentId){
+        return comments.remove(commentId);
+    }
+
 }

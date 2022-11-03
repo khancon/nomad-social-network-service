@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.akhan.nomadsocialnetworkservice.error.FieldDoesNotExistException;
 import com.akhan.nomadsocialnetworkservice.model.User;
 import com.akhan.nomadsocialnetworkservice.repository.UserRepository;
 
@@ -103,36 +104,28 @@ public class UserController {
     }
 
     @PatchMapping("/users/{id}")
-    public ResponseEntity<User> updateUserPartially(@PathVariable("id") String id, @RequestBody Map<String, Object> changes){
-        try {
+    public ResponseEntity<User> updateUserPartially(@PathVariable("id") String id, @RequestBody Map<String, Object> changes) throws FieldDoesNotExistException{
             Optional<User> _user = userRepository.findById(id);
-            if(_user.isPresent()){
-                User user = _user.get();
-                changes.forEach((change, value) -> {
-                    // System.out.println(change + ": " + value);
-                    LOGGER.info("Changing field {} for user {}", change, id);
-                    switch(change){
-                        case "firstName": user.setFirstName((String) value); break;
-                        case "lastName": user.setLastName((String) value); break;
-                        case "phoneNumber": user.setPhoneNumber((String) value); break;
-                        case "college": user.setCollege((String) value); break;
-                        case "gradYear": user.setGradYear((String) value); break;
-                        case "dob": user.setDob(LocalDate.parse((String)value)); break;
-                        case "email": user.setEmail((String) value); break;
-                        case "password": user.setPassword((String) value); break;
-                        case "location": user.setLocation((String) value); break;
-                        case "pronouns": user.setPronouns((String) value); break;
-                        // case "eventInterests": user.setEventInterests((List<String>) value); break;
-                        // case "friends": user.setFriends((List<String>) value); break;
-                    }
-                });
-                return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            User user = _user.get();
+            changes.forEach((change, value) -> {
+                // System.out.println(change + ": " + value);
+                LOGGER.info("Changing field {} for user {}", change, id);
+                switch(change){
+                    case "firstName": user.setFirstName((String) value); break;
+                    case "lastName": user.setLastName((String) value); break;
+                    case "phoneNumber": user.setPhoneNumber((String) value); break;
+                    case "college": user.setCollege((String) value); break;
+                    case "gradYear": user.setGradYear((String) value); break;
+                    case "dob": user.setDob(LocalDate.parse((String)value)); break;
+                    case "email": user.setEmail((String) value); break;
+                    case "password": user.setPassword((String) value); break;
+                    case "location": user.setLocation((String) value); break;
+                    case "pronouns": user.setPronouns((String) value); break;
+                    // case "eventInterests": user.setEventInterests((List<String>) value); break;
+                    // case "friends": user.setFriends((List<String>) value); break;
+                }
+            });
+            return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
     }
 
     @DeleteMapping("/users/{id}")

@@ -53,4 +53,20 @@ public class Event {
         this.date = date;
         this.time = time;
     }
+
+    public boolean addUserAttending(String userIdAttending){
+        if(!this.userIdsOfAttending.contains(userIdAttending)){
+            this.userIdsOfAttending.add(userIdAttending);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean addUserLiked(String userIdLiked){
+        if(!this.userIdsOfLiked.contains(userIdLiked)){
+            this.userIdsOfLiked.add(userIdLiked);
+            return true;
+        }
+        return false;
+    }
 }

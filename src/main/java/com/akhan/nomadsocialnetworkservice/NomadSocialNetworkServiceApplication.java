@@ -22,7 +22,7 @@ public class NomadSocialNetworkServiceApplication {
 	TagRepository tagRepository;
 
 	public static void main(String[] args) {
-		System.out.println("SOME CHANGE 11");
+		// System.out.println("SOME CHANGE 11");
 		SpringApplication.run(NomadSocialNetworkServiceApplication.class, args);
 	}
 

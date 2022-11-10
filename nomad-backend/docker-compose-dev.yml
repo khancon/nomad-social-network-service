@@ -1,0 +1,16 @@
+version: '3'
+services:
+  dev-db:
+    image: arm64v8/mongo:latest
+    environment:
+      MONGO_INITDB_DATABASE: nomad_db
+    ports:
+      - 27017:27017
+  dev-backend:
+    image: dev-backend:latest
+    build: .
+    environment:
+      MONGODB_URI: mongodb://dev-db:27017/nomad_db
+      MONGODB_NAME: nomad_db
+    ports:
+      - 8080:8080
